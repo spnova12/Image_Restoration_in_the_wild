@@ -1,6 +1,7 @@
 import numpy as np
 import math
 import cv2
+import os
 
 from torch.utils.data import DataLoader
 import torch
@@ -31,7 +32,7 @@ def main():
     DataParallel = True
 
     # <><><> 실험 이름.
-    exp_name = f'rain_001'
+    exp_name = f'001-DR'
     exp_dir = utils.make_dirs(f'train-out/{exp_name}')
     print(f'\n===> exp_name : {exp_name}')
 
@@ -46,9 +47,11 @@ def main():
 
     # <><><> checkpoint version
     checkpoint_version = 'checkpoint.pth'
-    checkpoint_version_A_pre = 'train-out/015/checkpoint_030000.pth'
 
-
+    # <><><> checkpoint version for netA
+    checkpoint_version_A_pre = 'train-out/018/checkpoint_008000.pth'
+    if not os.path.isfile(checkpoint_version_A_pre):
+        raise SystemExit(": no checkpoint found at '{}'".format(checkpoint_version_A_pre))
 
     ####################################################################################
     ####################################################################################
@@ -56,8 +59,8 @@ def main():
 
     # <><><> training 과 valid 에 추가로 사용되는 정보를 입력해준다.
     additional_info = {
-        'input_patch_size': 256,
-        'batch_size': 14
+        'input_patch_size': 128,
+        'batch_size': 16
     }
 
     # <><><> 사용할 딥러닝 모델들을 불러온다.
@@ -216,7 +219,7 @@ def main():
 
             ####################################################################################
             # 현재 상태 출력
-            interval = 1
+            interval = 10
             if iter_count % interval == 0:
                 # logs_dict = Train.get_logs_dict()
                 # print(logs_dict)

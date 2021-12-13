@@ -56,7 +56,7 @@ class EvalModule(object):
 
     def get_eval_set(self, median):
         # how many imgs for eval
-        imgs_for_eval_count = 3
+        imgs_for_eval_count = 20
 
         db_len = self.train_set.get_db_len()
         interval = db_len // imgs_for_eval_count
