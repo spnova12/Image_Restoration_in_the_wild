@@ -26,6 +26,10 @@ def recon(input_batch_tensor_list, net, scale_factor, odd, device):
 
         batch_tensor_out = net(*input_batch_tensor_list)
 
+        # MPRnet's out is list. out[0] is the final output.
+        if isinstance(batch_tensor_out, list):
+            batch_tensor_out = batch_tensor_out[0]
+
         batch_tensor_out = pad.unpadding(batch_tensor_out)
 
         batch_tensor_out = batch_tensor_out.cpu()

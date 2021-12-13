@@ -32,7 +32,7 @@ def main():
     DataParallel = True
 
     # <><><> 실험 이름.
-    exp_name = f'001-DR'
+    exp_name = f'R001'
     exp_dir = utils.make_dirs(f'train-out/{exp_name}')
     print(f'\n===> exp_name : {exp_name}')
 
