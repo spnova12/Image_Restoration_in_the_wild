@@ -1,0 +1,16 @@
+.ipynb_checkpoints/
+*.pyc
+.DS_Store
+
+.idea
+*checkpoints*
+*results*
+*.pth
+
+*.dng
+*.CR2
+*.png
+*.jpg
+
+*.json
+train-out
