@@ -46,7 +46,7 @@ def main():
     sigma = 3
 
     # <><><> checkpoint version
-    checkpoint_version = 'checkpoint.pth'
+    checkpoint_version = 'checkpoint_004000.pth'
 
     # <><><> checkpoint version for netA
     checkpoint_version_A_pre = 'train-out/018/checkpoint_008000.pth'
@@ -95,23 +95,6 @@ def main():
 
     # 찾은 num_workers 를 갖고 loader 을 만들어본다.
     train_set, train_loader = init_train_loader(num_workers=6)
-    # 만든 DataLoader 가 잘 작동하는지 확인하고자, sample 을 하나 뽑아본다.
-    # (https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html 참고)
-    dataiter = iter(train_loader)
-    batch_sample = dataiter.next()
-
-    # 뽑은 sample 을 tile 형태로 저장해본다.
-    print(f'\n===> sample from train_loader')
-    for key in batch_sample.keys():
-        print(f'{key}.shape : {batch_sample[key].shape}')
-        npimg = np.transpose(batch_sample[key].numpy(), (0, 2, 3, 1))
-
-        # tile 로 만들어준다. 아직 0~1 사이의 값이다.
-        sample_size = math.ceil(additional_info['batch_size'] ** 0.5)
-        img = utils.batch2one_img((sample_size, sample_size), npimg)
-
-        cv2.imwrite(f'{exp_dir}/{key}_samples.png', img * 255)
-
 
     ####################################################################################
     ####################################################################################
@@ -156,7 +139,48 @@ def main():
     # device setting 하고, optimizer setting 도 같이 해줌.
     iter_count, best_psnr = Train.weight_loader(f'{exp_dir}/{checkpoint_version}', f'{checkpoint_version_A_pre}')
 
+
+
     ####################################################################################
+    ####################################################################################
+    ####################################################################################
+
+    print(f'\n===> sample from train_loader')
+    # 만든 DataLoader 가 잘 작동하는지 확인하고자, sample 을 하나 뽑아본다.
+    # (https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html 참고)
+    dataiter = iter(train_loader)
+    batch_sample = dataiter.next()
+
+    # save sample patches function
+    def write_sample_tensor(my_tensor, my_tensor_name):
+        print(f'{my_tensor_name}.shape : {my_tensor.shape}')
+        npimg = np.transpose(my_tensor.numpy(), (0, 2, 3, 1))
+
+        # 뽑은 sample 을 tile 형태로 저장해본다. 아직 0~1 사이의 값이다.
+        sample_size = math.ceil(additional_info['batch_size'] ** 0.5)
+        img = utils.batch2one_img((sample_size, sample_size), npimg)
+
+        cv2.imwrite(f'{exp_dir}/{my_tensor_name}_samples.png', img * 255)
+
+
+    # Align img with A_pre net and save tile image.
+    if net_dict['A_pre'] is not None:
+        with torch.no_grad():
+            # todo. when no median.
+            target = net_dict['A_pre'](
+                batch_sample['median_img'].cuda(),
+                batch_sample['target_img'].cuda()).clone().detach()
+            write_sample_tensor(target.cpu(), 'target_img_aligned')
+
+    # 뽑은 sample 을 tile 형태로 저장해본다.
+    for key in batch_sample.keys():
+        write_sample_tensor(batch_sample[key].cpu(), key)
+
+
+    ####################################################################################
+    ####################################################################################
+    ####################################################################################
+
     # <><><> valid 해줄 객체를 초기화 해준다. (mode 1 일 경우)
     evals = module_eval.EvalModule(
         train_set=train_set,
