@@ -29,7 +29,7 @@ class DatasetForDataLoader(data.Dataset):
     여러 데이터셋을 지정한 비율대로 섞어서 사용할 수 있다.
     가장 크기가 큰 데이터셋을 기준으로 이미지 수를 조정해준다.
     """
-    def __init__(self, noise_type, additional_info=None, median=False):
+    def __init__(self, noise_type, additional_info=None, median=False, noise_level=None):
         """
         :param img_dirs: [(input, target), (input, target) ... (input, target)]
         """
@@ -43,6 +43,8 @@ class DatasetForDataLoader(data.Dataset):
         self.totensor = transforms.ToTensor()  # [0,255] -> [0,1] 로 만들어줌.
 
         self.db_len = self.hf_DB.get_db_len()
+
+        self.noise_level = noise_level
 
     def get_input_target_pairs(self, index, noise_level=None, noisy_num=None, median=False):
         input, target = self.hf_DB.get_input_target_pairs(index, noise_level, noisy_num, median=median)

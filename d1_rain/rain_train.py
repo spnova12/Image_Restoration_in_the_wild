@@ -32,12 +32,15 @@ def main():
     DataParallel = True
 
     # <><><> 실험 이름.
-    exp_name = f'R001'
+    exp_name = f'R002'
     exp_dir = utils.make_dirs(f'train-out/{exp_name}')
     print(f'\n===> exp_name : {exp_name}')
 
     # <><><> noise type ('R', 'F', 'D', 'S', 'L' : Rain, Fog, Dust, Snow, Lowlight)
     noise_type = 'R'
+
+    # <><><> noise level
+    my_noise_level = 4
 
     # <><><> DB with Median
     median = True
@@ -46,7 +49,7 @@ def main():
     sigma = 3
 
     # <><><> checkpoint version
-    checkpoint_version = 'checkpoint_009000.pth'
+    checkpoint_version = 'checkpoint_last.pth'
 
     # <><><> checkpoint version for netA
     checkpoint_version_A_pre = 'train-out/018/checkpoint_008000.pth'
@@ -59,8 +62,8 @@ def main():
 
     # <><><> training 과 valid 에 추가로 사용되는 정보를 입력해준다.
     additional_info = {
-        'input_patch_size': 128,
-        'batch_size': 16
+        'input_patch_size': 256,
+        'batch_size': 12
     }
 
     # <><><> 사용할 딥러닝 모델들을 불러온다.
@@ -80,7 +83,8 @@ def main():
         train_set = module_data.DatasetForDataLoader(
             noise_type,
             additional_info=additional_info,
-            median=median
+            median=median,
+            noise_level=my_noise_level
         )
 
         # 학습 전에 항상 train_loader 을 초기화 해준다.
@@ -187,7 +191,8 @@ def main():
         net_dict=net_dict,
         additional_info=additional_info,
         cuda_num=cuda_num,
-        median=median
+        median=median,
+        noise_level=my_noise_level
     )
     print(f'\n===> test set setting... (This may take some time.)')
     psnr_dict = evals.save_input_and_target(utils.make_dirs(f'{exp_dir}/evals'))
