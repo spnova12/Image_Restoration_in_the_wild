@@ -46,7 +46,7 @@ def main():
     sigma = 3
 
     # <><><> checkpoint version
-    checkpoint_version = 'checkpoint_004000.pth'
+    checkpoint_version = 'checkpoint_009000.pth'
 
     # <><><> checkpoint version for netA
     checkpoint_version_A_pre = 'train-out/018/checkpoint_008000.pth'
@@ -278,6 +278,7 @@ def main():
 
                 # 가장 최신 iter 에 해당하는 모델을 저장해준다.
                 Train.weight_saver(f'{exp_dir}/checkpoint_{str(iter_count).zfill(6)}.pth', iter_count, best_psnr)
+                Train.weight_saver(f'{exp_dir}/checkpoint_last.pth', iter_count, best_psnr)
 
 
             ####################################################################################
