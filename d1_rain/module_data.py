@@ -29,11 +29,12 @@ class DatasetForDataLoader(data.Dataset):
     여러 데이터셋을 지정한 비율대로 섞어서 사용할 수 있다.
     가장 크기가 큰 데이터셋을 기준으로 이미지 수를 조정해준다.
     """
-    def __init__(self, noise_type, additional_info=None, median=False, noise_level=None):
+    def __init__(self, hf_DB_dir, noise_type, additional_info=None, median=False, noise_level=None):
         """
         :param img_dirs: [(input, target), (input, target) ... (input, target)]
         """
-        self.hf_DB = HumanForrestManager('/hdd1/works/datasets/ssd2/human_and_forest/R_F_D_S_C', noise_type, show_details=False)
+        # hf_DB_dir = '/hdd1/works/datasets/ssd2/human_and_forest/R_F_D_S_C'
+        self.hf_DB = HumanForrestManager(hf_DB_dir, noise_type, show_details=False)
         self.ipsize = additional_info['input_patch_size']
         self.median = median
 

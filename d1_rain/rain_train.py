@@ -36,6 +36,9 @@ def main():
     exp_dir = utils.make_dirs(f'train-out/{exp_name}')
     print(f'\n===> exp_name : {exp_name}')
 
+    # <><><> hf_DB_dir
+    hf_DB_dir = '/home/lab/works/datasets/ssd2/human_and_forest/R_F_D_S_C'
+
     # <><><> noise type ('R', 'F', 'D', 'S', 'L' : Rain, Fog, Dust, Snow, Lowlight)
     noise_type = 'R'
 
@@ -81,6 +84,7 @@ def main():
     # DataLoader 을 만들어준다.
     def init_train_loader(num_workers):
         train_set = module_data.DatasetForDataLoader(
+            hf_DB_dir,
             noise_type,
             additional_info=additional_info,
             median=median,

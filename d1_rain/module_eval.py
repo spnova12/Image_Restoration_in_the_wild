@@ -32,6 +32,7 @@ class EvalModule(object):
         self.train_set = train_set
 
         self.median = median
+        self.noise_level = noise_level
 
         # my eval set from train set
         self.eval_set = self.get_eval_set(self.median)
@@ -52,8 +53,6 @@ class EvalModule(object):
             self.netA.eval()
             for param in self.netA.parameters():
                 param.requires_grad = False
-
-        self.noise_level = noise_level
 
 
     def get_eval_set(self, median):
